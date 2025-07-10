@@ -1,7 +1,7 @@
 // ManageBlogs.jsx
 import React, { useEffect, useState } from 'react';
 import api from '../../api';
-import './admin.css';
+import './Admin.css';
 
 const ManageBlogs = () => {
   const [blogs, setBlogs] = useState([]);
