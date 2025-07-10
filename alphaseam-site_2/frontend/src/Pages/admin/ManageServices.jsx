@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../api';
-import './admin.css';
+import './Admin.css';
 
 const ManageServices = () => {
   const [services, setServices] = useState([]);
