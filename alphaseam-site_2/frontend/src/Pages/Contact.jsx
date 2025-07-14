@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Contact.css';
 import { FaFacebookF, FaTwitter, FaLinkedinIn } from 'react-icons/fa';
-import api from '../api'; // ✅ make sure path is correct
+import api from '../api'; // Ensure this points to your configured Axios instance
 
 function Contact() {
   const [formData, setFormData] = useState({
@@ -20,15 +20,14 @@ function Contact() {
 
   const handleSubmit = async () => {
     try {
-      // Combine subject and message into one if your backend only stores 'message'
       const payload = {
         name: formData.name,
         email: formData.email,
-        phone: formData.subject, // assuming subject is used as phone (you can rename this)
+        phone: formData.subject,
         message: formData.message
       };
 
-      const res = await api.post('/api/contacts', payload);
+      await api.post('/api/contacts', payload);
       alert('Message sent successfully!');
       setFormData({ name: '', email: '', subject: '', message: '' });
     } catch (error) {
@@ -39,25 +38,26 @@ function Contact() {
 
   return (
     <>
-      {/* Background video section with title */}
+      {/* Hero Section */}
       <section className="contact-video-section">
         <div className="contact-overlay"></div>
         <h1 className="contact-heading">Contact Us</h1>
       </section>
 
-      {/* Contact content */}
+      {/* Contact Info & Form */}
       <div className="contact-container fade-in">
         <h1 className="title">Get In Touch</h1>
         <div className="contact-wrapper">
+          {/* Contact Details */}
           <div className="contact-details">
             <h2>Contact Details</h2>
             <p>
-              We would love to connect with you! Please fill out the form below or email us directly at
-              <a href="mailto:info@alphaseam.com"> info@alphaseam.com</a> to get in touch.
+              We would love to connect with you! Please fill out the form below or email us at
+              <a href="mailto:info@alphaseam.com"> info@alphaseam.com</a>.
             </p>
             <ul>
               <li>🏠 601 Gera's Imperium Rise, Hinjewadi Phase 2</li>
-              <li>📱 +91-, +91-*</li>
+              <li>📱 +91-9876543210</li>
               <li>📧 info@alphaseam.com</li>
             </ul>
             <div className="social-icons">
@@ -67,6 +67,7 @@ function Contact() {
             </div>
           </div>
 
+          {/* Contact Form */}
           <div className="contact-form">
             <input
               type="text"
@@ -98,22 +99,28 @@ function Contact() {
             <textarea
               name="message"
               placeholder="Message"
+              rows="6"
               value={formData.message}
               onChange={handleChange}
-              rows="6"
               className="fade-in-up"
               required
-            ></textarea>
-            <button className="submit-button fade-in-up" onClick={handleSubmit}>SUBMIT</button>
+            />
+            <button className="submit-button fade-in-up" onClick={handleSubmit}>
+              SUBMIT
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Map */}
+      {/* Google Map */}
       <div className="map-container fade-in-up">
         <iframe
           title="Google Map"
-          src="https://www.google.com/maps/embed?pb=!1m18!..."
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3782.5487251464766!2d73.7327033140906!3d18.54818268739548!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2bbb7b58e7c27%3A0x6a2e1e6f07f088db!2sGera's%20Imperium%20Rise%2C%20Hinjewadi%20Phase%202!5e0!3m2!1sen!2sin!4v1716543210000!5m2!1sen!2sin"
+          width="100%"
+          height="450"
+          style={{ border: 0 }}
+          allowFullScreen=""
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
         ></iframe>
