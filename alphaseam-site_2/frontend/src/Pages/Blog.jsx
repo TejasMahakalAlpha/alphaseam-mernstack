@@ -7,11 +7,11 @@ import api from '../api';
 
 const Blog = () => {
   const [blogs, setBlogs] = useState([]);
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
   useEffect(() => {
     AOS.init({ once: true, duration: 1000 });
 
-    // Fetch blogs from backend
     api.get('/api/blogs')
       .then(res => setBlogs(res.data))
       .catch(err => console.error('Error fetching blogs:', err));
@@ -44,10 +44,9 @@ const Blog = () => {
                 data-aos="fade-up"
                 data-aos-delay={200 + index * 100}
               >
-                {/* Show image if exists */}
                 {blog.image && (
                   <img
-                    src={`http://localhost:5000${blog.image}`}
+                    src={`${BASE_URL}${blog.image}`}
                     alt={blog.title}
                     className="blog-image"
                   />
