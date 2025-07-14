@@ -11,6 +11,9 @@ const ManageBlogs = () => {
     image: null,
   });
 
+  // ✅ Backend URL from .env or default
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://exilieen-tejas-backend.onrender.com';
+
   useEffect(() => {
     fetchBlogs();
   }, []);
@@ -18,7 +21,7 @@ const ManageBlogs = () => {
   const fetchBlogs = () => {
     api.get('/api/blogs')
       .then(res => setBlogs(res.data))
-      .catch(err => console.error(err));
+      .catch(err => console.error('Fetch error:', err));
   };
 
   const handleChange = (e) => {
@@ -54,6 +57,7 @@ const ManageBlogs = () => {
     <div className="admin-container">
       <h2>Manage Blogs</h2>
 
+      {/* Form */}
       <form onSubmit={handleSubmit} className="admin-form">
         <input
           type="text"
@@ -80,14 +84,16 @@ const ManageBlogs = () => {
         <button type="submit">Add Blog</button>
       </form>
 
+      {/* Blog List */}
       <div className="admin-list">
         {blogs.map((blog) => (
           <div key={blog._id} className="admin-item">
             <h4>{blog.title}</h4>
             <p>{blog.content}</p>
+
             {blog.image && (
               <img
-                src={`http://localhost:5000${blog.image}`}
+                src={`${BASE_URL}${blog.image}`}
                 alt="blog-img"
                 style={{ width: '100px', height: 'auto', marginTop: '8px' }}
               />
