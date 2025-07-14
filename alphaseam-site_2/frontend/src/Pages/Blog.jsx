@@ -7,7 +7,7 @@ import api from '../api';
 
 const Blog = () => {
   const [blogs, setBlogs] = useState([]);
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://exilieen-tejas-backend.onrender.com';
 
   useEffect(() => {
     AOS.init({ once: true, duration: 1000 });
