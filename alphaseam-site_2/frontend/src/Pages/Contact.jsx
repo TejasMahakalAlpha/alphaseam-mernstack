@@ -56,7 +56,7 @@ function Contact() {
               <a href="mailto:info@alphaseam.com"> info@alphaseam.com</a>.
             </p>
             <ul>
-              <li>🏠 601 Gera's Imperium Rise, Hinjewadi Phase 2</li>
+              <li>🏠 ALPHASEAM, Pune</li>
               <li>📱 +91-9876543210</li>
               <li>📧 info@alphaseam.com</li>
             </ul>
@@ -112,11 +112,11 @@ function Contact() {
         </div>
       </div>
 
-      {/* Google Map */}
+      {/* Google Map Updated */}
       <div className="map-container fade-in-up">
         <iframe
           title="Google Map"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3782.5487251464766!2d73.7327033140906!3d18.54818268739548!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2bbb7b58e7c27%3A0x6a2e1e6f07f088db!2sGera's%20Imperium%20Rise%2C%20Hinjewadi%20Phase%202!5e0!3m2!1sen!2sin!4v1716543210000!5m2!1sen!2sin"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3781.5042755279146!2d73.71548897465382!3d18.596374866855435!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2c11ae71d12cf%3A0x5e0b13fd00d2d1bd!2sALPHASEAM!5e0!3m2!1sen!2sin!4v1752488878608!5m2!1sen!2sin"
           width="100%"
           height="450"
           style={{ border: 0 }}
