@@ -18,7 +18,7 @@ const loginAdmin = async (req, res) => {
     const admin = await Admin.findOne({ email });
     if (!admin) return res.status(401).json({ message: 'Invalid email' });
 
-      // 🔍 DEBUG: Print incoming and stored password for testing
+     
     console.log("Incoming password:", password);
     console.log("Stored hash:", admin.password);
 
