@@ -58,8 +58,15 @@ const Services = () => {
       <section className="skills-section">
         <div className="skills-header">
           <h2>Our Skills</h2>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloribus fugiat, vel veniam, eos et delectus eveniet molestiae. Esse, voluptas ratione.</p>
-          <hr />
+<ul>
+  <li><strong>ERP & SAP Implementation</strong> – Expert in SAP S/4HANA, SAP ABAP, FICO, MM, SD, PP Modules</li>
+  <li><strong>Full-Stack Web Development</strong> – React, Node.js, Express, MongoDB, Firebase, REST APIs</li>
+  <li><strong>Cloud Technologies</strong> – AWS, Azure, Google Cloud Platform</li>
+  <li><strong>Mobile App Development</strong> – Android & iOS (Flutter, React Native)</li>
+  <li><strong>DevOps & CI/CD</strong> – Docker, Jenkins, GitHub Actions, Kubernetes</li>
+  <li><strong>UI/UX Design</strong> – Figma, Adobe XD, responsive and user-friendly interface design</li>
+  <li><strong>Cybersecurity & Compliance</strong> – Data protection, secure app development, ISO practices</li>
+</ul>          <hr />
         </div>
 
         <div className="skills-content">

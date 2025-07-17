@@ -57,13 +57,15 @@ function Contact() {
             </p>
             <ul>
               <li>🏠 ALPHASEAM, Pune</li>
-              <li>📱 +91-9876543210</li>
+              <li>📱 +91-7887182811</li>
+              {/* <li>📱 +91-9876543210</li> */}
+
               <li>📧 info@alphaseam.com</li>
             </ul>
             <div className="social-icons">
-              <a href="https://facebook.com" className="icon"><FaFacebookF /></a>
-              <a href="https://twitter.com" className="icon"><FaTwitter /></a>
-              <a href="https://linkedin.com" className="icon"><FaLinkedinIn /></a>
+              {/* <a href="https://facebook.com" className="icon"><FaFacebookF /></a>
+              <a href="https://twitter.com" className="icon"><FaTwitter /></a> */}
+              <a href="https://www.linkedin.com/company/alphaseam-enterprises-llp/" className="icon"><FaLinkedinIn /></a>
             </div>
           </div>
 

@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
-import CustomCursor from './Components/CustomCursor';
 
 
 
@@ -38,7 +37,7 @@ function App() {
   return (
     <Router>
       <ScrollToTopWrapper>
-        <CustomCursor />
+      
 
         <Routes>
           {/* ---------- Public Routes ---------- */}

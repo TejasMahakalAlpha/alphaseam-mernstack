@@ -22,15 +22,16 @@ const Footer = () => {
 
         <div className="footer-contact">
           <p>Email: <a href="mailto:info@alphaseam.com">info@alphaseam.com</a></p>
-          <p>Phone: <a href="tel:+910000000000">+91 0000000000</a></p>
+          <p>Phone: <a href="tel:+917387182811">+91 7387182811</a></p>
+
           <div className="footer-socials">
-            <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram">
+            {/* <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram">
               <FaInstagram />
             </a>
             <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook">
               <FaFacebookF />
-            </a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+            </a> */}
+            <a href="https://www.linkedin.com/company/alphaseam-enterprises-llp/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
               <FaLinkedinIn />
             </a>
           </div>
