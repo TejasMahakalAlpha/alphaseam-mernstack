@@ -47,6 +47,7 @@ const Career = () => {
     message: '',
     resume: null,
   });
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     AOS.init({ once: true, duration: 1000, easing: 'ease-in-out' });
@@ -73,19 +74,68 @@ const Career = () => {
     setShowModal(false);
     document.body.style.overflow = 'auto';
     setFormData({ name: '', email: '', phone: '', message: '', resume: null });
+    setErrors({}); // Clear errors on close
+  };
+
+  // --- Validation Logic ---
+  const validateField = (name, value) => {
+    let error = '';
+    switch (name) {
+      case 'name':
+        if (!value) error = 'Name is required.';
+        else if (!/^[a-zA-Z\s]+$/.test(value)) error = 'Name can only contain letters and spaces.';
+        break;
+      case 'email':
+        if (!value) error = 'Email is required.';
+        else if (!/\S+@\S+\.\S+/.test(value)) error = 'Please enter a valid email address.';
+        break;
+      case 'phone':
+        if (!value) error = 'Phone number is required.';
+        else if (!/^\d{10}$/.test(value)) error = 'Phone number must be exactly 10 digits.';
+        break;
+      case 'resume':
+        if (!value) error = 'Resume is required.';
+        break;
+      default:
+        break;
+    }
+    return error;
   };
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === 'resume') {
-      setFormData({ ...formData, resume: files[0] });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+    const fieldValue = name === 'resume' ? files[0] : value;
+    
+    setFormData({ ...formData, [name]: fieldValue });
+
+    // Real-time validation
+    const error = validateField(name, fieldValue);
+    setErrors(prev => ({ ...prev, [name]: error }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate all fields on submit
+    const newErrors = {};
+    let formIsValid = true;
+    Object.keys(formData).forEach(key => {
+      // Message is optional, skip validation if it's empty
+      if (key === 'message' && !formData[key]) return;
+
+      const error = validateField(key, formData[key]);
+      if (error) {
+        newErrors[key] = error;
+        formIsValid = false;
+      }
+    });
+
+    setErrors(newErrors);
+
+    if (!formIsValid) {
+      showNotification('Please fix the errors before submitting.', 'error');
+      return;
+    }
 
     const data = new FormData();
     data.append('job', selectedJob?.position);
@@ -112,7 +162,6 @@ const Career = () => {
         <meta name="description" content="Explore career openings at Alphaseam Enterprise. Join a dynamic IT company specializing in SAP and ERP technologies." />
       </Helmet>
 
-      {/* Notification Toast */}
       {notification.show && (
         <div className={`notification-toast ${notification.type} ${notification.show ? 'show' : ''}`}>
           {notification.type === 'success' ? <FaCheckCircle /> : <FaExclamationCircle />}
@@ -147,21 +196,34 @@ const Career = () => {
           )) : <p className="no-openings">No current openings. Check back soon!</p>}
         </div>
 
-        {/* MODAL FORM */}
         {showModal && (
           <div className="modal-overlay" onClick={handleCloseForm}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
               <button className="modal-close-btn" onClick={handleCloseForm}><FaTimes /></button>
               <h3>Apply for: {selectedJob?.position}</h3>
-              <form onSubmit={handleSubmit} className="modal-form">
-                <input type="text" name="name" placeholder="Your Name" required value={formData.name} onChange={handleChange} />
-                <input type="email" name="email" placeholder="Your Email" required value={formData.email} onChange={handleChange} />
-                <input type="tel" name="phone" placeholder="Your Phone" required value={formData.phone} onChange={handleChange} />
-                <textarea name="message" placeholder="Your Message (Optional)" rows="4" value={formData.message} onChange={handleChange}></textarea>
-                <label htmlFor="resume-upload" className="resume-label">
-                  {formData.resume ? `📄 ${formData.resume.name}` : 'Upload Your Resume (PDF/DOC)'}
-                </label>
-                <input id="resume-upload" type="file" name="resume" accept=".pdf,.doc,.docx" required onChange={handleChange} />
+              <form onSubmit={handleSubmit} className="modal-form" noValidate>
+                <div className="input-wrapper">
+                  <input type="text" name="name" placeholder="Your Name" value={formData.name} onChange={handleChange} className={errors.name ? 'error' : ''} />
+                  {errors.name && <span className="error-message">{errors.name}</span>}
+                </div>
+                <div className="input-wrapper">
+                  <input type="email" name="email" placeholder="Your Email" value={formData.email} onChange={handleChange} className={errors.email ? 'error' : ''} />
+                  {errors.email && <span className="error-message">{errors.email}</span>}
+                </div>
+                <div className="input-wrapper">
+                  <input type="tel" name="phone" placeholder="Your Phone" value={formData.phone} onChange={handleChange} className={errors.phone ? 'error' : ''} />
+                  {errors.phone && <span className="error-message">{errors.phone}</span>}
+                </div>
+                <div className="input-wrapper">
+                  <textarea name="message" placeholder="Your Message (Optional)" rows="4" value={formData.message} onChange={handleChange}></textarea>
+                </div>
+                <div className="input-wrapper">
+                  <label htmlFor="resume-upload" className={`resume-label ${errors.resume ? 'error' : ''}`}>
+                    {formData.resume ? `📄 ${formData.resume.name}` : 'Upload Your Resume (PDF/DOC)'}
+                  </label>
+                  <input id="resume-upload" type="file" name="resume" accept=".pdf,.doc,.docx" onChange={handleChange} style={{ display: 'none' }} />
+                  {errors.resume && <span className="error-message">{errors.resume}</span>}
+                </div>
                 <div className="modal-buttons">
                   <button type="submit" className="glowing-btn">Submit Application</button>
                 </div>
