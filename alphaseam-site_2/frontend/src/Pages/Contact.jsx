@@ -1,15 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Contact.css';
-import { FaFacebookF, FaTwitter, FaLinkedinIn } from 'react-icons/fa';
-import api from '../api'; // Ensure this points to your configured Axios instance
+import { Helmet } from 'react-helmet';
+import { FaLinkedinIn, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
+import api from '../api'; 
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
+// Custom Hook for the 3D Tilt effect
+const use3DTilt = () => {
+    const ref = useRef(null);
+    useEffect(() => {
+      const element = ref.current;
+      if (!element) return;
+      const handleMouseMove = (e) => {
+        const { left, top, width, height } = element.getBoundingClientRect();
+        const x = e.clientX - left;
+        const y = e.clientY - top;
+        const rotateX = (y / height - 0.5) * -15;
+        const rotateY = (x / width - 0.5) * 15;
+        element.style.setProperty('--rotateX', `${rotateX}deg`);
+        element.style.setProperty('--rotateY', `${rotateY}deg`);
+      };
+      const handleMouseLeave = () => {
+        element.style.setProperty('--rotateX', '0deg');
+        element.style.setProperty('--rotateY', '0deg');
+      };
+      element.addEventListener('mousemove', handleMouseMove);
+      element.addEventListener('mouseleave', handleMouseLeave);
+      return () => {
+        element.removeEventListener('mousemove', handleMouseMove);
+        element.removeEventListener('mouseleave', handleMouseLeave);
+      };
+    }, []);
+    return ref;
+};
+
 
 function Contact() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    subject: '',
+    phone: '', // Changed from subject to phone for clarity
     message: '',
   });
+  const [notification, setNotification] = useState({ show: false, message: '', type: 'success' });
+  const contactFormRef = use3DTilt();
+
+  useEffect(() => {
+    AOS.init({ once: true, duration: 1000, easing: 'ease-in-out' });
+  }, []);
+
+  const showNotification = (message, type = 'success') => {
+    setNotification({ show: true, message, type });
+    setTimeout(() => {
+      setNotification({ show: false, message: '', type: 'success' });
+    }, 4000);
+  };
 
   const handleChange = (e) => {
     setFormData(prev => ({
@@ -18,107 +64,78 @@ function Contact() {
     }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
+      // Payload remains the same as backend expects 'phone'
       const payload = {
         name: formData.name,
         email: formData.email,
-        phone: formData.subject,
+        phone: formData.phone,
         message: formData.message
       };
 
       await api.post('/api/contacts', payload);
-      alert('Message sent successfully!');
-      setFormData({ name: '', email: '', subject: '', message: '' });
+      showNotification('Message sent successfully!');
+      setFormData({ name: '', email: '', phone: '', message: '' });
     } catch (error) {
       console.error('Submit error:', error);
-      alert('Failed to send message.');
+      showNotification('Failed to send message.', 'error');
     }
   };
 
   return (
-    <>
-      {/* Hero Section */}
-      <section className="contact-video-section">
-        <div className="contact-overlay"></div>
-        <h1 className="contact-heading">Contact Us</h1>
-      </section>
+    <div className="contact-page">
+       {/* Notification Toast */}
+       {notification.show && (
+        <div className={`notification-toast ${notification.type} ${notification.show ? 'show' : ''}`}>
+          {notification.type === 'success' ? <FaCheckCircle /> : <FaExclamationCircle />}
+          {notification.message}
+        </div>
+      )}
 
-      {/* Contact Info & Form */}
-      <div className="contact-container fade-in">
-        <h1 className="title">Get In Touch</h1>
-        <div className="contact-wrapper">
+      <div className="contact-hero-section" data-aos="fade-in">
+        <h1>Get In Touch</h1>
+        <p>We're here to help and answer any question you might have. We look forward to hearing from you.</p>
+      </div>
+
+      <div className="contact-content-wrapper">
+        <div className="contact-grid">
           {/* Contact Details */}
-          <div className="contact-details">
-            <h2>Contact Details</h2>
+          <div className="contact-details-card" data-aos="fade-right">
+            <h3>Contact Information</h3>
             <p>
-              We would love to connect with you! Please fill out the form below or email us at
-              <a href="mailto:info@alphaseam.com"> info@alphaseam.com</a>.
+              Fill up the form and our team will get back to you within 24 hours.
             </p>
             <ul>
-              <li>🏠 ALPHASEAM, Pune</li>
-              <li>📱 +91-7887182811</li>
-              {/* <li>📱 +91-9876543210</li> */}
-
-              <li>📧 info@alphaseam.com</li>
+              <li><FaPhoneAlt className="contact-icon" /> <a href="tel:+917387182811">+91-7387182811</a></li>
+              <li><FaEnvelope className="contact-icon" /> <a href="mailto:info@alphaseam.com">info@alphaseam.com</a></li>
+              <li><FaMapMarkerAlt className="contact-icon" /> <span>City Centre, Hinjawadi, Pune</span></li>
             </ul>
-            <div className="social-icons">
-              {/* <a href="https://facebook.com" className="icon"><FaFacebookF /></a>
-              <a href="https://twitter.com" className="icon"><FaTwitter /></a> */}
-              <a href="https://www.linkedin.com/company/alphaseam-enterprises-llp/" className="icon"><FaLinkedinIn /></a>
+            <div className="social-icons-wrapper">
+              <a href="https://www.linkedin.com/company/alphaseam-enterprises-llp/" target="_blank" rel="noopener noreferrer" className="social-icon">
+                <FaLinkedinIn />
+              </a>
             </div>
           </div>
 
           {/* Contact Form */}
-          <div className="contact-form">
-            <input
-              type="text"
-              name="name"
-              placeholder="Your Name"
-              value={formData.name}
-              onChange={handleChange}
-              className="fade-in-up"
-              required
-            />
-            <input
-              type="email"
-              name="email"
-              placeholder="Your Email"
-              value={formData.email}
-              onChange={handleChange}
-              className="fade-in-up"
-              required
-            />
-            <input
-              type="text"
-              name="subject"
-              placeholder="Subject"
-              value={formData.subject}
-              onChange={handleChange}
-              className="fade-in-up"
-              required
-            />
-            <textarea
-              name="message"
-              placeholder="Message"
-              rows="6"
-              value={formData.message}
-              onChange={handleChange}
-              className="fade-in-up"
-              required
-            />
-            <button className="submit-button fade-in-up" onClick={handleSubmit}>
-              SUBMIT
-            </button>
+          <div className="contact-form-card" ref={contactFormRef} data-aos="fade-left">
+            <form onSubmit={handleSubmit} className="contact-form-content">
+              <input type="text" name="name" placeholder="Your Name" value={formData.name} onChange={handleChange} required />
+              <input type="email" name="email" placeholder="Your Email" value={formData.email} onChange={handleChange} required />
+              <input type="tel" name="phone" placeholder="Your Phone Number" value={formData.phone} onChange={handleChange} required />
+              <textarea name="message" placeholder="Your Message" rows="5" value={formData.message} onChange={handleChange} required />
+              <button type="submit" className="glowing-btn large">Send Message</button>
+            </form>
           </div>
         </div>
       </div>
 
-      {/* Google Map Updated */}
-      <div className="map-container fade-in-up">
+      <div className="map-section" data-aos="fade-up" data-aos-delay="300">
         <iframe
           title="Google Map"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3781.5042755279146!2d73.71548897465382!3d18.596374866855435!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2c11ae71d12cf%3A0x5e0b13fd00d2d1bd!2sALPHASEAM!5e0!3m2!1sen!2sin!4v1752488878608!5m2!1sen!2sin"
+          src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d121008.75162320398!2d73.68082358566583!3d18.59550967191338!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2bbe7af9b56b1%3A0x7c1c86b796e12483!2sCity%20Centre%20-%20Kolte%20Patil!5e0!3m2!1sen!2sin!4v1754387642034!5m2!1sen!2sin"
           width="100%"
           height="450"
           style={{ border: 0 }}
@@ -127,7 +144,7 @@ function Contact() {
           referrerPolicy="no-referrer-when-downgrade"
         ></iframe>
       </div>
-    </>
+    </div>
   );
 }
 

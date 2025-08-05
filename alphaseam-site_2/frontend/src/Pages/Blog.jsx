@@ -4,93 +4,93 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { Helmet } from 'react-helmet';
 import api from '../api';
+import { FaArrowRight } from 'react-icons/fa';
 
 const Blog = () => {
   const [blogs, setBlogs] = useState([]);
   const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://exilieen-tejas-backend.onrender.com';
+  const newsletterLink = "https://www.linkedin.com/newsletters/alphaseam-sap-services-7341412789007069189";
 
   useEffect(() => {
-    AOS.init({ once: true, duration: 1000 });
+    AOS.init({ once: true, duration: 1000, easing: 'ease-in-out' });
 
     api.get('/api/blogs')
       .then(res => setBlogs(res.data))
       .catch(err => console.error('Error fetching blogs:', err));
   }, []);
 
+  const featuredBlog = blogs.length > 0 ? blogs[0] : null;
+  const otherBlogs = blogs.length > 1 ? blogs.slice(1) : [];
+
   return (
     <div className="blog-page">
       <Helmet>
         <title>Tech Insights | Alphaseam Blog</title>
+        <meta name="description" content="Expert analysis and insights on enterprise technology, SAP, and digital transformation from the Alphaseam team." />
       </Helmet>
 
-      <div className="hero-section">
-        <div className="hero-overlay"></div>
-        <div className="header-content">
-          <h1 className="hero-title" data-aos="fade-down">Alphaseam Insights</h1>
-          <p className="hero-subtitle" data-aos="fade-up" data-aos-delay="100">
-            Expert analysis on enterprise technology
-          </p>
-        </div>
+      <div className="blog-hero-section" data-aos="fade-in">
+        <h1>Alphaseam Insights</h1>
+        <p>Your source for expert analysis on enterprise technology, digital transformation, and the future of SAP.</p>
       </div>
 
-      <main className="blog-content">
-        <section className="categories-section">
-          <h2 className="section-title" data-aos="fade-up">Latest Articles</h2>
-          <div className="categories-grid">
-            {blogs.length > 0 ? blogs.map((blog, index) => (
-              <div
-                key={blog._id}
-                className="category-card"
-                data-aos="fade-up"
-                data-aos-delay={200 + index * 100}
-              >
-                {blog.image && (
-                  <img
-                    src={`${BASE_URL}${blog.image}`}
-                    alt={blog.title}
-                    className="blog-image"
-                  />
-                )}
-
-                <div className="category-header">
-                  <h3>{blog.title}</h3>
+      <main className="blog-content-wrapper">
+        {/* Featured Blog Post */}
+        {featuredBlog && (
+          <section className="featured-post-section" data-aos="fade-up">
+            <h2 className="section-title">Featured Article</h2>
+            <div className="featured-card">
+              {featuredBlog.image && (
+                <div className="featured-image-wrapper">
+                   <img src={`${BASE_URL}${featuredBlog.image}`} alt={featuredBlog.title} className="featured-image" />
                 </div>
-
-                <p className="blog-snippet">
-                  {blog.content?.slice(0, 150)}...
-                </p>
-
-                <div className="blog-meta">
-                  <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
-                </div>
-
-                <button
-                  className="view-all-btn"
-                  onClick={() => alert('Read more coming soon')}
-                >
-                  Read More
-                </button>
+              )}
+              <div className="featured-content">
+                <span className="featured-date">{new Date(featuredBlog.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                <h3>{featuredBlog.title}</h3>
+                <p>{featuredBlog.content?.slice(0, 200)}...</p>
+                <a href="#" className="read-more-link">
+                  Read More <FaArrowRight />
+                </a>
               </div>
-            )) : (
-              <p>No blog posts found.</p>
-            )}
-          </div>
+            </div>
+          </section>
+        )}
+
+        {/* Other Blog Posts */}
+        <section className="latest-articles-section">
+          <h2 className="section-title" data-aos="fade-up">Latest Articles</h2>
+          {otherBlogs.length > 0 ? (
+            <div className="blog-grid">
+              {otherBlogs.map((blog, index) => (
+                <div key={blog._id} className="blog-card" data-aos="fade-up" data-aos-delay={100 + index * 100}>
+                  {blog.image && (
+                    <img src={`${BASE_URL}${blog.image}`} alt={blog.title} className="blog-card-image" />
+                  )}
+                  <div className="blog-card-content">
+                    <span className="blog-date">{new Date(blog.createdAt).toLocaleDateString()}</span>
+                    <h4>{blog.title}</h4>
+                    <p>{blog.content?.slice(0, 100)}...</p>
+                    <a href="#" className="read-more-link">
+                      Read More <FaArrowRight />
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            !featuredBlog && <p className="no-blogs-message">No blog posts found. Check back soon!</p>
+          )}
         </section>
 
-        <div className="cta-section" data-aos="zoom-in">
-          <button
-            className="subscribe-btn"
-            onClick={() => alert('Subscribe functionality')}
-          >
-            Subscribe to Updates
-          </button>
-          <button
-            className="write-btn"
-            onClick={() => alert('Write for us functionality')}
-          >
-            Write for Us
-          </button>
-        </div>
+        {/* CTA Section */}
+        <section className="blog-cta-section" data-aos="zoom-in">
+            <h3>Stay Ahead of the Curve</h3>
+            <p>Subscribe to our exclusive SAP and tech insights newsletter on LinkedIn.</p>
+            <a href={newsletterLink} target="_blank" rel="noopener noreferrer" className="glowing-btn large">
+              Subscribe on LinkedIn
+            </a>
+        </section>
       </main>
     </div>
   );

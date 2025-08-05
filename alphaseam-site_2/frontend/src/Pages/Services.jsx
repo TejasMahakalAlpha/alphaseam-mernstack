@@ -1,130 +1,167 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './Services.css';
 import { Link } from 'react-router-dom';
-import api from '../api'; // ✅ adjust if path is different
-// You must have: VITE_BACKEND_URL=http://localhost:5000 or your server URL in .env
+import api from '../api'; 
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
+import {
+  FaReact, FaNodeJs, FaAws, FaApple, FaAndroid, FaFigma, FaDocker, FaShieldAlt, FaCogs
+} from 'react-icons/fa';
+
+
+// Data for the new Hexagon Skills Grid
+const skillsData = [
+  { icon: <FaCogs />, title: "ERP & SAP", description: "Expertise in SAP S/4HANA, ABAP, FICO, MM, SD, PP Modules." },
+  { icon: <FaReact />, title: "Full-Stack Web", description: "React, Node.js, Express, MongoDB, Firebase, REST APIs." },
+  { icon: <FaAws />, title: "Cloud Tech", description: "AWS, Azure, and Google Cloud Platform solutions." },
+  { icon: <FaAndroid />, title: "Mobile Apps", description: "Android & iOS development using Flutter and React Native." },
+  { icon: <FaDocker />, title: "DevOps & CI/CD", description: "Docker, Jenkins, GitHub Actions, and Kubernetes." },
+  { icon: <FaFigma />, title: "UI/UX Design", description: "Figma, Adobe XD for responsive, user-friendly interfaces." },
+  { icon: <FaShieldAlt />, title: "Cybersecurity", description: "Data protection, secure development, and ISO practices." },
+];
 
 const stats = [
-  { icon: "⏰", value: 5, label: "Happy Clients" },
-  { icon: "🔄", value: 4, label: "Projects completed" },
-  { icon: "✏", value: 4, label: "Positive feedback" },
-  { icon: "⚡", value: 450, label: "Hours Of Support" },
+  { icon: "😊", value: 5, label: "Happy Clients" },
+  { icon: "✨", value: 4, label: "Projects completed" },
+  { icon: "👍", value: 4, label: "Positive feedback" },
+  { icon: "⏳", value: 450, label: "Hours Of Support" },
 ];
+
+// Custom Hook for the 3D Tilt effect
+const use3DTilt = () => {
+    const ref = useRef(null);
+  
+    useEffect(() => {
+      const element = ref.current;
+      if (!element) return;
+  
+      const handleMouseMove = (e) => {
+        const { left, top, width, height } = element.getBoundingClientRect();
+        const x = e.clientX - left;
+        const y = e.clientY - top;
+  
+        const rotateX = (y / height - 0.5) * -25;
+        const rotateY = (x / width - 0.5) * 25;
+  
+        element.style.setProperty('--rotateX', `${rotateX}deg`);
+        element.style.setProperty('--rotateY', `${rotateY}deg`);
+      };
+  
+      const handleMouseLeave = () => {
+        element.style.setProperty('--rotateX', '0deg');
+        element.style.setProperty('--rotateY', '0deg');
+      };
+  
+      element.addEventListener('mousemove', handleMouseMove);
+      element.addEventListener('mouseleave', handleMouseLeave);
+  
+      return () => {
+        element.removeEventListener('mousemove', handleMouseMove);
+        element.removeEventListener('mouseleave', handleMouseLeave);
+      };
+    }, []);
+  
+    return ref;
+};
+
 
 const Services = () => {
   const [services, setServices] = useState([]);
   const consultationLink = "https://calendly.com/alphaseam-operations/30min";
 
+  // Create refs for each service card
+  const serviceCardRefs = useRef([]);
+  serviceCardRefs.current = services.map(
+    (ref, index) => serviceCardRefs.current[index] ?? React.createRef()
+  );
+
   useEffect(() => {
+    AOS.init({ once: true, duration: 1000, easing: 'ease-in-out' });
+    
     api.get('/api/services')
       .then((res) => setServices(res.data))
       .catch((err) => console.error('Error fetching services:', err));
   }, []);
 
   return (
-    <>
-      {/* Background Video Section */}
-      <section className="services-video-section">
-        <div className="services-overlay"></div>
-        <div className="services-heading-content">
-          <h1 className="services-main-heading">Our Services</h1>
-        </div>
-      </section>
-
-      {/* Services Description Section */}
-      <section className="services">
-        <p className="description">
-          Empowered by exceptional talent, Alphaseam Pvt Ltd elevates your digital
-          landscape by converging innovation and technology to craft bespoke software
-          solutions that drive business success.
+    <div className="services-page">
+      <div className="services-hero-section" data-aos="fade-in">
+        <h1>Our Services</h1>
+        <p>
+          Empowered by exceptional talent, Alphaseam elevates your digital landscape by converging innovation and technology to craft bespoke software solutions that drive business success.
         </p>
+      </div>
 
-        <div className="grid">
+      <section className="services-grid-section">
+        <div className="services-grid">
           {services.length === 0 ? (
-            <p style={{ textAlign: 'center', color: '#999' }}>No services available.</p>
+            <p className="loading-text">Loading Services...</p>
           ) : (
-            services.map((service) => (
-              <div className="box" key={service._id}>
-                <div className="icon">{service.icon || "🛠️"}</div>
-                <h3>{service.title}</h3>
-                <p>{service.description}</p>
+            services.map((service, index) => (
+              <div 
+                className="service-card-3d" 
+                key={service._id}
+                ref={use3DTilt()} // Apply 3D tilt hook here
+                data-aos="zoom-in-up"
+                data-aos-delay={index * 100}
+              >
+                <div className="service-card-content">
+                  <div className="service-icon">{service.icon || "🛠️"}</div>
+                  <h3>{service.title}</h3>
+                  <p>{service.description}</p>
+                </div>
               </div>
             ))
           )}
         </div>
       </section>
 
-      {/* Skills Section */}
-      <section className="skills-section">
-        <div className="skills-header">
-          <h2>Our Skills</h2>
-<ul>
-  <li><strong>ERP & SAP Implementation</strong> – Expert in SAP S/4HANA, SAP ABAP, FICO, MM, SD, PP Modules</li>
-  <li><strong>Full-Stack Web Development</strong> – React, Node.js, Express, MongoDB, Firebase, REST APIs</li>
-  <li><strong>Cloud Technologies</strong> – AWS, Azure, Google Cloud Platform</li>
-  <li><strong>Mobile App Development</strong> – Android & iOS (Flutter, React Native)</li>
-  <li><strong>DevOps & CI/CD</strong> – Docker, Jenkins, GitHub Actions, Kubernetes</li>
-  <li><strong>UI/UX Design</strong> – Figma, Adobe XD, responsive and user-friendly interface design</li>
-  <li><strong>Cybersecurity & Compliance</strong> – Data protection, secure app development, ISO practices</li>
-</ul>          <hr />
+      {/* New "Our Skills" Section with Hexagon Grid */}
+      <section className="skills-section-v2">
+        <h2 data-aos="fade-up">Our Technical Skills</h2>
+        <div className="skills-hexagon-grid" data-aos="fade-up" data-aos-delay="200">
+          {skillsData.map((skill, index) => (
+            <div key={index} className="hexagon-wrapper">
+              <div className="hexagon">
+                <div className="hexagon-icon">{skill.icon}</div>
+                <div className="hexagon-title">{skill.title}</div>
+              </div>
+            </div>
+          ))}
         </div>
-
-        <div className="skills-content">
-          <div className="left">
+        <div className="skills-cta" data-aos="fade-up" data-aos-delay="400">
             <h3>Custom Software Development</h3>
             <p>
-              Alphaseam custom software development empowers businesses to thrive by optimizing
-              processes, increasing efficiency, and enhancing decision-making capabilities,
-              delivering high-quality solutions quickly and efficiently to meet your unique needs.
+              Alphaseam's custom software development empowers businesses to thrive by optimizing processes, increasing efficiency, and enhancing decision-making capabilities, delivering high-quality solutions to meet your unique needs.
             </p>
-            <div className="cta-buttons">
-              <Link to="/Contact" className="btn primary">Contact Us</Link>
-            </div>
-          </div>
-
-          <div className="right">
-            <div className="skill-bar"><span>DBMS</span><div className="bar"><div className="progress dbms"></div></div></div>
-            <div className="skill-bar"><span>Web Application</span><div className="bar"><div className="progress web"></div></div></div>
-            <div className="skill-bar"><span>Android Application</span><div className="bar"><div className="progress android"></div></div></div>
-            <div className="skill-bar"><span>iOS Development</span><div className="bar"><div className="progress ios"></div></div></div>
-          </div>
+            <Link to="/contact" className="glowing-btn">Contact Us</Link>
         </div>
       </section>
 
-      {/* About Stats Section */}
-      <section className="about">
-        <div className="about-text">
-          <h2>About Our Company.</h2>
-          <p>
-            Alphaseam Pvt Ltd is a global leader in software development, dedicated to
-            empowering businesses worldwide with cutting-edge technological solutions.
-            Founded in 2019, we have consistently delivered exceptional apps that drive
-            business growth and success.
-          </p>
-        </div>
-
-        <div className="about-stats">
+      <section className="stats-section">
+        <h2 data-aos="fade-up">Our Achievements</h2>
+        <div className="stats-grid">
           {stats.map((stat, index) => (
-            <div className="stat-box" key={index}>
+            <div className="stat-card" key={index} data-aos="fade-up" data-aos-delay={index * 150}>
               <div className="stat-icon">{stat.icon}</div>
-              <h3>{stat.value}</h3>
-              <p>{stat.label}</p>
+              <div className="stat-value">{stat.value}{index === 0 ? '+' : ''}</div>
+              <div className="stat-label">{stat.label}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Free Consultation Button Section */}
       <section className="consultation-cta-section">
-        <div className="consultation-content">
-          <h2>Ready to transform your business?</h2>
-          <p>Book a free consultation with our experts to discuss your project and discover how we can help.</p>
-          <a href={consultationLink} target="_blank" rel="noopener noreferrer" className="btn primary consultation-btn">
+        <div className="consultation-content" data-aos="zoom-in">
+          <h2>Ready to Transform Your Business?</h2>
+          <p>Book a free consultation with our experts to discuss your project and discover how we can help build your future.</p>
+          <a href={consultationLink} target="_blank" rel="noopener noreferrer" className="glowing-btn large">
             Book Free Consultation
           </a>
         </div>
       </section>
-    </>
+    </div>
   );
 };
 
