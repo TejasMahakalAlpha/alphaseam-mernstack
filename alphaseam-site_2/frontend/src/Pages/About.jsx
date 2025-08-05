@@ -93,7 +93,7 @@ const About = () => {
           </p>
         </section>
 
-        {/* Core Values Section - Horizontal Scroll */}
+        {/* Core Values Section - Now responsive with horizontal scroll */}
         <section className="core-values-section">
           <h2 data-aos="fade-up">Our Core Values</h2>
           <div className="values-grid">
