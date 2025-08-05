@@ -286,12 +286,14 @@ h2 {
 }
 
 .roadmap-node {
-    width: 24px;
-    height: 24px;
+    width: 14px;
+    height: 14px;
     background: #fff;
     border-radius: 50%;
-    border: 3px solid var(--primary-glow);
-    box-shadow: 0 0 20px 5px var(--primary-glow);
+    border: 3px solid ;
+    /* var(--primary-glow); */
+    box-shadow: 0 0 20px 5px ;
+    /* var(--primary-glow); */
     position: relative;
     animation: pulse 2s infinite;
 }

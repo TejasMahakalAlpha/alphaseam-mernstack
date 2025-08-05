@@ -39,22 +39,22 @@ const coreValues = [
 // Data for Journey Section
 const journeyData = [
   {
-    year: "2018",
+    year: "2022",
     title: "Founded in Pune",
     desc: "Established with a clear vision to become a trusted global leader in SAP and ERP solutions."
   },
   {
-    year: "2020",
+    year: "2023",
     title: "Global Expansion",
     desc: "Grew rapidly and began serving a diverse clientele across Europe, the Middle East, and Asia."
   },
   {
-    year: "2022",
+    year: "2024",
     title: "Team Expansion",
     desc: "Built a world-class, diverse team of certified consultants, expert analysts, and creative developers."
   },
   {
-    year: "2024",
+    year: "2025",
     title: "Excellence Delivered",
     desc: "Successfully completed over 50 major enterprise projects with a track record of global delivery and innovation."
   }
