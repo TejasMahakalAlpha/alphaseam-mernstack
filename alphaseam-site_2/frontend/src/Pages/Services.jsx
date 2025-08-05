@@ -6,7 +6,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 import {
-  FaReact, FaNodeJs, FaAws, FaApple, FaAndroid, FaFigma, FaDocker, FaShieldAlt, FaCogs
+  FaReact, FaNodeJs, FaAws, FaFigma, FaDocker, FaShieldAlt, FaCogs, FaCode, FaLink, FaUsers, FaCloud, FaMobileAlt, FaAndroid
 } from 'react-icons/fa';
 
 
@@ -65,10 +65,21 @@ const use3DTilt = () => {
     return ref;
 };
 
-// --- 1. Created a new component for the service card ---
-// This fixes the "Hooks can only be called inside the body of a function component" error.
+// --- Function to get a default icon based on service title (with added safety check) ---
+const getIconForService = (title) => {
+    // This check prevents the app from crashing if a service has no title
+    const lowerCaseTitle = (title || '').toLowerCase(); 
+    if (lowerCaseTitle.includes('sap')) return <FaCogs />;
+    if (lowerCaseTitle.includes('software') || lowerCaseTitle.includes('development')) return <FaCode />;
+    if (lowerCaseTitle.includes('integration')) return <FaLink />;
+    if (lowerCaseTitle.includes('consulting')) return <FaUsers />;
+    if (lowerCaseTitle.includes('cloud')) return <FaCloud />;
+    if (lowerCaseTitle.includes('mobile') || lowerCaseTitle.includes('app')) return <FaMobileAlt />;
+    return "⚙️"; // Generic fallback icon
+};
+
 const ServiceCard = ({ service, index }) => {
-  const tiltRef = use3DTilt(); // Hook is now called correctly at the top level of this component
+  const tiltRef = use3DTilt();
 
   return (
     <div 
@@ -78,7 +89,7 @@ const ServiceCard = ({ service, index }) => {
       data-aos-delay={index * 100}
     >
       <div className="service-card-content">
-        <div className="service-icon">{service.icon || "🛠️"}</div>
+        <div className="service-icon">{service.icon || getIconForService(service.title)}</div>
         <h3>{service.title}</h3>
         <p>{service.description}</p>
       </div>
@@ -128,7 +139,6 @@ const Services = () => {
             <p className="loading-text">Loading Services...</p>
           ) : (
             Array.isArray(services) && services.length > 0 ? (
-              // --- 2. Mapped over the new ServiceCard component ---
               services.map((service, index) => (
                 <ServiceCard key={service._id} service={service} index={index} />
               ))
