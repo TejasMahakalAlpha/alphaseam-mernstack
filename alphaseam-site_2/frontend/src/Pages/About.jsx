@@ -87,18 +87,18 @@ const About = () => {
         </section>
 
         <section className="section-intro" data-aos="fade-up" data-aos-delay="300">
-          <h2>Who We Are</h2>
+          <h2>Who Are We ?</h2>
           <p>
             With a diverse team of developers, consultants, and strategists, Alphaseam combines deep domain knowledge with technical expertise to deliver intelligent and scalable software systems. We are not just a service provider — we are your trusted transformation partner, dedicated to your success.
           </p>
         </section>
 
-        {/* Core Values Section - Now responsive with horizontal scroll */}
+        {/* Core Values Section */}
         <section className="core-values-section">
           <h2 data-aos="fade-up">Our Core Values</h2>
           <div className="values-grid">
             {coreValues.map((value, index) => (
-              <div key={index} className="flip-card-container" data-aos="zoom-in-up" data-aos-delay={100 * index}>
+              <div key={index} className="flip-card-container">
                 <div className="flip-card-inner">
                   <div className="flip-card-front">
                     <div className="card-icon">{value.icon}</div>
@@ -113,7 +113,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* --- Galactic Roadmap "Our Journey" Section --- */}
+        {/* Galactic Roadmap Section */}
         <section className="journey-section-v3">
             <h2 data-aos="fade-up">Our Galactic Roadmap</h2>
             <div className="roadmap-container">
@@ -131,8 +131,6 @@ const About = () => {
                 ))}
             </div>
         </section>
-        {/* --- End of Galactic Roadmap Section --- */}
-
 
         <section className="section-intro final-card" data-aos="zoom-in" data-aos-delay="400">
             <h2>Why Choose Alphaseam?</h2>

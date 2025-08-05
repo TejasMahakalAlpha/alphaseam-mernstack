@@ -112,20 +112,29 @@ h2 {
   backdrop-filter: blur(10px);
 }
 
-/* ======== Core Values - 3D Flip Cards (Horizontal Scroll for All Devices) ======== */
+/* ======== Core Values - 3D Flip Cards (Responsive) ======== */
+/* Desktop Horizontal Scroll Layout */
 .values-grid {
   display: flex;
-  overflow-x: auto;
-  gap: 30px;
+  overflow-x: auto; /* Enable manual horizontal scroll */
+  gap: 20px;
   padding: 20px;
-  margin: 0 -20px; /* Counteract container padding for full-bleed scroll */
+  margin: 0 -20px;
   -webkit-overflow-scrolling: touch;
-  /* Hide scrollbar for a cleaner look */
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: var(--secondary-glow) var(--dark-bg);
 }
-
+/* Custom Scrollbar for Webkit (Chrome, Safari) */
 .values-grid::-webkit-scrollbar {
-  display: none; /* Safari and Chrome */
+  height: 8px;
+}
+.values-grid::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.3);
+  border-radius: 4px;
+}
+.values-grid::-webkit-scrollbar-thumb {
+  background-color: var(--secondary-glow);
+  border-radius: 4px;
 }
 
 .flip-card-container {
@@ -169,6 +178,21 @@ h2 {
 .flip-card-front .card-icon { font-size: 3.5rem; color: var(--primary-glow); margin-bottom: 20px; text-shadow: 0 0 15px var(--primary-glow); }
 .flip-card-front h3 { font-size: 1.4rem; font-weight: 700; color: #fff; }
 .flip-card-back { transform: rotateY(180deg); font-size: 1rem; line-height: 1.6; }
+
+/* Tablet & Mobile Vertical Grid */
+@media (max-width: 900px) {
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 30px;
+    overflow-x: visible; /* Disable horizontal scroll */
+    margin: 0; /* Reset margin */
+    padding: 0; /* Reset padding */
+  }
+  .flip-card-container {
+    flex: none; /* Reset flex property */
+  }
+}
 
 
 /* ======== Galactic Roadmap Journey Section V3 ======== */

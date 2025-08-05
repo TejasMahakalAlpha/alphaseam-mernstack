@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Contact.css';
-import { Helmet } from 'react-helmet';
 import { FaLinkedinIn, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
-import api from '../api'; 
+import api from '../api';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
@@ -40,9 +39,10 @@ function Contact() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone: '', // Changed from subject to phone for clarity
+    phone: '',
     message: '',
   });
+  const [errors, setErrors] = useState({});
   const [notification, setNotification] = useState({ show: false, message: '', type: 'success' });
   const contactFormRef = use3DTilt();
 
@@ -57,17 +57,75 @@ function Contact() {
     }, 4000);
   };
 
+  // --- Validation Logic ---
+  const validateField = (name, value) => {
+    let error = '';
+    switch (name) {
+      case 'name':
+        if (!value) {
+          error = 'Name is required.';
+        } else if (!/^[a-zA-Z\s]+$/.test(value)) {
+          error = 'Name can only contain letters and spaces.';
+        }
+        break;
+      case 'email':
+        if (!value) {
+          error = 'Email is required.';
+        } else if (!/\S+@\S+\.\S+/.test(value)) {
+          error = 'Please enter a valid email address.';
+        }
+        break;
+      case 'phone':
+        if (!value) {
+            error = 'Phone number is required.';
+        } else if (!/^\d{10}$/.test(value)) {
+            error = 'Phone number must be exactly 10 digits.';
+        }
+        break;
+      case 'message':
+        if (!value) {
+          error = 'Message is required.';
+        }
+        break;
+      default:
+        break;
+    }
+    return error;
+  };
+
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [name]: value
     }));
+    // Real-time validation
+    const error = validateField(name, value);
+    setErrors(prev => ({ ...prev, [name]: error }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate all fields on submit
+    const newErrors = {};
+    let formIsValid = true;
+    Object.keys(formData).forEach(key => {
+      const error = validateField(key, formData[key]);
+      if (error) {
+        newErrors[key] = error;
+        formIsValid = false;
+      }
+    });
+
+    setErrors(newErrors);
+
+    if (!formIsValid) {
+      showNotification('Please fix the errors before submitting.', 'error');
+      return;
+    }
+
     try {
-      // Payload remains the same as backend expects 'phone'
       const payload = {
         name: formData.name,
         email: formData.email,
@@ -78,6 +136,7 @@ function Contact() {
       await api.post('/api/contacts', payload);
       showNotification('Message sent successfully!');
       setFormData({ name: '', email: '', phone: '', message: '' });
+      setErrors({});
     } catch (error) {
       console.error('Submit error:', error);
       showNotification('Failed to send message.', 'error');
@@ -86,7 +145,6 @@ function Contact() {
 
   return (
     <div className="contact-page">
-       {/* Notification Toast */}
        {notification.show && (
         <div className={`notification-toast ${notification.type} ${notification.show ? 'show' : ''}`}>
           {notification.type === 'success' ? <FaCheckCircle /> : <FaExclamationCircle />}
@@ -101,7 +159,6 @@ function Contact() {
 
       <div className="contact-content-wrapper">
         <div className="contact-grid">
-          {/* Contact Details */}
           <div className="contact-details-card" data-aos="fade-right">
             <h3>Contact Information</h3>
             <p>
@@ -119,13 +176,24 @@ function Contact() {
             </div>
           </div>
 
-          {/* Contact Form */}
           <div className="contact-form-card" ref={contactFormRef} data-aos="fade-left">
-            <form onSubmit={handleSubmit} className="contact-form-content">
-              <input type="text" name="name" placeholder="Your Name" value={formData.name} onChange={handleChange} required />
-              <input type="email" name="email" placeholder="Your Email" value={formData.email} onChange={handleChange} required />
-              <input type="tel" name="phone" placeholder="Your Phone Number" value={formData.phone} onChange={handleChange} required />
-              <textarea name="message" placeholder="Your Message" rows="5" value={formData.message} onChange={handleChange} required />
+            <form onSubmit={handleSubmit} className="contact-form-content" noValidate>
+              <div className="input-wrapper">
+                <input type="text" name="name" placeholder="Your Name" value={formData.name} onChange={handleChange} className={errors.name ? 'error' : ''} />
+                {errors.name && <span className="error-message">{errors.name}</span>}
+              </div>
+              <div className="input-wrapper">
+                <input type="email" name="email" placeholder="Your Email" value={formData.email} onChange={handleChange} className={errors.email ? 'error' : ''} />
+                {errors.email && <span className="error-message">{errors.email}</span>}
+              </div>
+              <div className="input-wrapper">
+                <input type="tel" name="phone" placeholder="Your Phone Number" value={formData.phone} onChange={handleChange} className={errors.phone ? 'error' : ''} />
+                {errors.phone && <span className="error-message">{errors.phone}</span>}
+              </div>
+              <div className="input-wrapper">
+                <textarea name="message" placeholder="Your Message" rows="5" value={formData.message} onChange={handleChange} className={errors.message ? 'error' : ''} />
+                {errors.message && <span className="error-message">{errors.message}</span>}
+              </div>
               <button type="submit" className="glowing-btn large">Send Message</button>
             </form>
           </div>
