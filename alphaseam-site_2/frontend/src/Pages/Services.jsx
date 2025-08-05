@@ -65,23 +65,52 @@ const use3DTilt = () => {
     return ref;
 };
 
+// --- 1. Created a new component for the service card ---
+// This fixes the "Hooks can only be called inside the body of a function component" error.
+const ServiceCard = ({ service, index }) => {
+  const tiltRef = use3DTilt(); // Hook is now called correctly at the top level of this component
+
+  return (
+    <div 
+      className="service-card-3d" 
+      ref={tiltRef}
+      data-aos="zoom-in-up"
+      data-aos-delay={index * 100}
+    >
+      <div className="service-card-content">
+        <div className="service-icon">{service.icon || "🛠️"}</div>
+        <h3>{service.title}</h3>
+        <p>{service.description}</p>
+      </div>
+    </div>
+  );
+};
+
 
 const Services = () => {
   const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
   const consultationLink = "https://calendly.com/alphaseam-operations/30min";
-
-  // Create refs for each service card
-  const serviceCardRefs = useRef([]);
-  serviceCardRefs.current = services.map(
-    (ref, index) => serviceCardRefs.current[index] ?? React.createRef()
-  );
 
   useEffect(() => {
     AOS.init({ once: true, duration: 1000, easing: 'ease-in-out' });
     
     api.get('/api/services')
-      .then((res) => setServices(res.data))
-      .catch((err) => console.error('Error fetching services:', err));
+      .then((res) => {
+        if (Array.isArray(res.data)) {
+          setServices(res.data);
+        } else {
+          console.error('API response is not an array:', res.data);
+          setServices([]);
+        }
+      })
+      .catch((err) => {
+        console.error('Error fetching services:', err);
+        setServices([]);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   return (
@@ -95,29 +124,22 @@ const Services = () => {
 
       <section className="services-grid-section">
         <div className="services-grid">
-          {services.length === 0 ? (
+          {loading ? (
             <p className="loading-text">Loading Services...</p>
           ) : (
-            services.map((service, index) => (
-              <div 
-                className="service-card-3d" 
-                key={service._id}
-                ref={use3DTilt()} // Apply 3D tilt hook here
-                data-aos="zoom-in-up"
-                data-aos-delay={index * 100}
-              >
-                <div className="service-card-content">
-                  <div className="service-icon">{service.icon || "🛠️"}</div>
-                  <h3>{service.title}</h3>
-                  <p>{service.description}</p>
-                </div>
-              </div>
-            ))
+            Array.isArray(services) && services.length > 0 ? (
+              // --- 2. Mapped over the new ServiceCard component ---
+              services.map((service, index) => (
+                <ServiceCard key={service._id} service={service} index={index} />
+              ))
+            ) : (
+              <p className="loading-text">No services available at the moment.</p>
+            )
           )}
         </div>
       </section>
 
-      {/* New "Our Skills" Section with Hexagon Grid */}
+      {/* Other sections remain unchanged */}
       <section className="skills-section-v2">
         <h2 data-aos="fade-up">Our Technical Skills</h2>
         <div className="skills-hexagon-grid" data-aos="fade-up" data-aos-delay="200">
