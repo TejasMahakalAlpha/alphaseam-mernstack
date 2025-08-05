@@ -22,10 +22,10 @@ const skillsData = [
 ];
 
 const stats = [
-  { icon: "😊", value: 5, label: "Happy Clients" },
-  { icon: "✨", value: 4, label: "Projects completed" },
-  { icon: "👍", value: 4, label: "Positive feedback" },
-  { icon: "⏳", value: 450, label: "Hours Of Support" },
+  { icon: "😊", value: 7, label: "Happy Clients" },
+  { icon: "✨", value: 7, label: "Projects completed" },
+  { icon: "👍", value: 10 , label: "Positive feedback" },
+  { icon: "⏳", value: 750, label: "Hours Of Support" },
 ];
 
 // Custom Hook for the 3D Tilt effect
