@@ -21,11 +21,11 @@ const skillsData = [
   { icon: <FaShieldAlt />, title: "Cybersecurity", description: "Data protection, secure development, and ISO practices." },
 ];
 
+// --- Updated stats data with a 'symbol' property ---
 const stats = [
-  { icon: "😊", value: 7, label: "Happy Clients" },
-  { icon: "✨", value: 7, label: "Projects completed" },
-  { icon: "👍", value: 10 , label: "Positive feedback" },
-  { icon: "⏳", value: 750, label: "Hours Of Support" },
+  { icon: "✨", value: 13, label: "Projects Completed", symbol: '+' },
+  { icon: "👍", value: 18 , label: "Positive Feedback", symbol: '+' },
+  { icon: "⏳", value: 80, label: "Certified Resources", symbol: '%' },
 ];
 
 // Custom Hook for the 3D Tilt effect
@@ -177,7 +177,8 @@ const Services = () => {
           {stats.map((stat, index) => (
             <div className="stat-card" key={index} data-aos="fade-up" data-aos-delay={index * 150}>
               <div className="stat-icon">{stat.icon}</div>
-              <div className="stat-value">{stat.value}{index === 0 ? '+' : ''}</div>
+              {/* --- Updated this line to use the 'symbol' property --- */}
+              <div className="stat-value">{stat.value}{stat.symbol}</div>
               <div className="stat-label">{stat.label}</div>
             </div>
           ))}

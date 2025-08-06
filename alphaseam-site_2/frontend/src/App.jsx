@@ -3,8 +3,6 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import Header from './Components/Header';
 import Footer from './Components/Footer';
 
-
-
 // Public Pages
 import Home from './Pages/Home';
 import Contact from './Pages/Contact';
@@ -12,6 +10,7 @@ import Services from './Pages/Services';
 import Career from './Pages/Career';
 import About from './Pages/About';
 import Blog from './Pages/Blog';
+import Projects from './Pages/Projects'; // --- 1. Imported the new Projects component ---
 
 // Admin Pages (make sure all these files are in Pages/admin/)
 import AdminLogin from './Pages/admin/AdminLogin';
@@ -37,8 +36,6 @@ function App() {
   return (
     <Router>
       <ScrollToTopWrapper>
-      
-
         <Routes>
           {/* ---------- Public Routes ---------- */}
           <Route
@@ -101,6 +98,17 @@ function App() {
               </>
             }
           />
+          {/* --- 2. Added the new route for the Projects page --- */}
+          <Route
+            path="/projects"
+            element={
+              <>
+                <Header />
+                <Projects />
+                <Footer />
+              </>
+            }
+          />
 
           {/* ---------- Admin Routes ---------- */}
           <Route path="/admin/login" element={<AdminLogin />} />
@@ -144,7 +152,7 @@ function App() {
               </ProtectedRoute>
             }
           /> 
-  <Route path="/admin/resumes" element={<ManageResumes />} />
+          <Route path="/admin/resumes" element={<ProtectedRoute><ManageResumes /></ProtectedRoute>} />
 
         </Routes>
       </ScrollToTopWrapper>
