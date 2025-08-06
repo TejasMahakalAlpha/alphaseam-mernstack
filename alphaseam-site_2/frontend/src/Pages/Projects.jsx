@@ -6,16 +6,12 @@ import 'aos/dist/aos.css';
 import mooropan from "../assets/home/mooropan.png";
 import exilieen from "../assets/home/exilieen_logo.png";
 import srdt from "../assets/home/srdt.png";
+import agrimitra from "../assets/home/agrimitra.jpeg"
 
 
 // --- Updated Project Data with Images ---
 const projectsData = [
-  {
-    image: "https://placehold.co/600x400/0a0a14/9f55ff?text=Crowd+Funding",
-    title: "Crowd Funding",
-    description: "A robust platform for raising capital through community contributions, featuring secure payment gateways and project tracking.",
-    tags: ["React", "Java Spring boot", "SQL", "Rozerpay"]
-  },
+  
   {
     image: mooropan, // --- Corrected this line ---
     title: "MooRopan",
@@ -34,17 +30,24 @@ const projectsData = [
     description: "A comprehensive software suite for managing complex business operations and workflows.",
     tags: ["React js", "Express js", "MongoDB", "Node js"]
   },
+  
+  {
+    image: agrimitra,
+    title: "AgriMitra",
+    description: "A farmer-centric application providing vital information on weather, market rates, and best farming practices.",
+    tags: ["React js", "Express js", "MongoDB", "Node js"]
+  },
+  {
+    image: "https://placehold.co/600x400/0a0a14/9f55ff?text=Crowd+Funding",
+    title: "Crowd Funding",
+    description: "A robust platform for raising capital through community contributions, featuring secure payment gateways and project tracking.",
+    tags: ["React", "Java", "Spring boot", "MySQL", "Rozerpay","postgresql"]
+  },
   {
     image: "https://placehold.co/600x400/0a0a14/9f55ff?text=Hotel+CRM",
     title: "Hotel Management CRM",
     description: "A customer relationship management system tailored for the hospitality industry to enhance guest experiences.",
     tags: ["React", "Java Spring boot", "SQL"]
-  },
-  {
-    image: "https://placehold.co/600x400/0a0a14/9f55ff?text=AgriMitra",
-    title: "AgriMitra",
-    description: "A farmer-centric application providing vital information on weather, market rates, and best farming practices.",
-    tags: ["React js", "Express js", "MongoDB", "Node js"]
   },
   {
     image: "https://placehold.co/600x400/0a0a14/9f55ff?text=AMSA",
