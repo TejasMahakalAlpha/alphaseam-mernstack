@@ -11,7 +11,9 @@ const Dashboard = () => {
         <Link to="/admin/manage-blogs">Manage Blogs</Link>
         <Link to="/admin/manage-careers">Manage Careers</Link>
         <Link to="/admin/manage-contacts">Manage Contacts</Link>
-<Link to="/admin/resumes">Manage Resume</Link>
+        <Link to="/admin/resumes">Manage Resume</Link>
+        {/* --- NEW: Link to Manage Projects page --- */}
+        <Link to="/admin/manage-projects">Manage Projects</Link>
       </nav>
     </div>
   );

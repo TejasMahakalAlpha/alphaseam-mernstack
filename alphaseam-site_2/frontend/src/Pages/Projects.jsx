@@ -1,63 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import axios from 'axios';
 import './Projects.css';
 import { Link } from 'react-router-dom';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import mooropan from "../assets/home/mooropan.png";
-import exilieen from "../assets/home/exilieen_logo.png";
-import srdt from "../assets/home/srdt.png";
-import agrimitra from "../assets/home/agrimitra.jpeg"
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
-// --- Updated Project Data with Images ---
-const projectsData = [
-  
-  {
-    image: mooropan, // --- Corrected this line ---
-    title: "MooRopan",
-    description: "An agricultural tech solution designed to optimize crop management and improve yield for farmers.",
-    tags: ["React js", "MongoDB", "Express js"]
-  },
-  {
-    image: srdt,
-    title: "SRDT",
-    description: "A security and data transformation tool ensuring data integrity and protection for enterprise-level applications.",
-    tags: ["React", "Java Spring boot", "SQL"]
-  },
-  {
-    image: exilieen,
-    title: "Exilieen",
-    description: "A comprehensive software suite for managing complex business operations and workflows.",
-    tags: ["React js", "Express js", "MongoDB", "Node js"]
-  },
-  
-  {
-    image: agrimitra,
-    title: "AgriMitra",
-    description: "A farmer-centric application providing vital information on weather, market rates, and best farming practices.",
-    tags: ["React js", "Express js", "MongoDB", "Node js"]
-  },
-  {
-    image: "https://placehold.co/600x400/0a0a14/9f55ff?text=Crowd+Funding",
-    title: "Crowd Funding",
-    description: "A robust platform for raising capital through community contributions, featuring secure payment gateways and project tracking.",
-    tags: ["React", "Java", "Spring boot", "MySQL", "Rozerpay","postgresql"]
-  },
-  {
-    image: "https://placehold.co/600x400/0a0a14/9f55ff?text=Hotel+CRM",
-    title: "Hotel Management CRM",
-    description: "A customer relationship management system tailored for the hospitality industry to enhance guest experiences.",
-    tags: ["React", "Java Spring boot", "SQL"]
-  },
-  {
-    image: "https://placehold.co/600x400/0a0a14/9f55ff?text=AMSA",
-    title: "AMSA",
-    description: "An advanced e-commerce and supply chain management application for seamless online retail operations.",
-    tags: ["React js", "Express js", "MongoDB", "Node js"]
-  }
-];
-
-// Custom Hook for the 3D Tilt effect
 const use3DTilt = () => {
     const ref = useRef(null);
     useEffect(() => {
@@ -88,23 +37,44 @@ const use3DTilt = () => {
 
 const ProjectCard = ({ project, index }) => {
     const tiltRef = use3DTilt();
+    const imageUrl = project.imageUrl ? `${API_BASE_URL}${project.imageUrl}` : "https://placehold.co/600x400/0a0a14/9f55ff?text=Project";
+
     return (
         <div className="project-card-3d" ref={tiltRef} data-aos="fade-up" data-aos-delay={100 * index}>
-            <img src={project.image} alt={project.title} className="project-card-image" />
+            <img src={imageUrl} alt={project.title} className="project-card-image" />
             <div className="project-card-content">
                 <h3>{project.title}</h3>
                 <p>{project.description}</p>
                 <div className="project-tags">
-                    {project.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}
+                    {project.tags && project.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}
                 </div>
+                {/* The "View Project" button has been removed from here */}
             </div>
         </div>
     );
 };
 
 const Projects = () => {
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   useEffect(() => {
     AOS.init({ once: true, duration: 1000, easing: 'ease-in-out' });
+
+    const fetchProjects = async () => {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/api/projects`);
+        setProjects(response.data);
+      } catch (err) {
+        console.error("Error fetching projects:", err);
+        setError("Could not load projects. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
   }, []);
 
   return (
@@ -116,9 +86,15 @@ const Projects = () => {
 
       <div className="projects-content-wrapper">
         <div className="projects-grid">
-          {projectsData.map((project, index) => (
-            <ProjectCard key={index} project={project} index={index} />
-          ))}
+          {loading ? (
+            <p className="loading-message">Loading Projects...</p>
+          ) : error ? (
+            <p className="error-message">{error}</p>
+          ) : (
+            projects.map((project, index) => (
+              <ProjectCard key={project._id} project={project} index={index} />
+            ))
+          )}
         </div>
 
         <section className="projects-cta-section" data-aos="zoom-in">

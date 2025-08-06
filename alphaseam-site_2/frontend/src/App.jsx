@@ -10,9 +10,9 @@ import Services from './Pages/Services';
 import Career from './Pages/Career';
 import About from './Pages/About';
 import Blog from './Pages/Blog';
-import Projects from './Pages/Projects'; // --- 1. Imported the new Projects component ---
+import Projects from './Pages/Projects';
 
-// Admin Pages (make sure all these files are in Pages/admin/)
+// Admin Pages
 import AdminLogin from './Pages/admin/AdminLogin';
 import Dashboard from './Pages/admin/Dashboard';
 import ManageBlogs from './Pages/admin/ManageBlogs';
@@ -20,6 +20,7 @@ import ManageCareers from './Pages/admin/ManageCareers';
 import ManageContacts from './Pages/admin/ManageContacts';
 import ManageServices from './Pages/admin/ManageServices';
 import ManageResumes from './Pages/admin/ManageResumes';
+import ManageProjects from './Pages/admin/ManageProjects'; // --- NEW: Import ManageProjects component ---
 
 // Protected route wrapper
 import ProtectedRoute from './routes/ProtectedRoute';
@@ -98,7 +99,6 @@ function App() {
               </>
             }
           />
-          {/* --- 2. Added the new route for the Projects page --- */}
           <Route
             path="/projects"
             element={
@@ -153,6 +153,16 @@ function App() {
             }
           /> 
           <Route path="/admin/resumes" element={<ProtectedRoute><ManageResumes /></ProtectedRoute>} />
+
+          {/* --- NEW: Route for ManageProjects page --- */}
+          <Route 
+            path="/admin/manage-projects"
+            element={
+              <ProtectedRoute>
+                <ManageProjects />
+              </ProtectedRoute>
+            }
+          />
 
         </Routes>
       </ScrollToTopWrapper>

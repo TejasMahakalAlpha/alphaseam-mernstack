@@ -21,6 +21,7 @@
     "react-router-dom": "^7.6.2",
     "react-scroll-parallax": "^3.4.5",
     "react-tsparticles": "^2.12.2",
+    "sweetalert2": "^11.22.2",
     "tsparticles": "^3.8.1"
   },
   "devDependencies": {
