@@ -5,6 +5,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import mooropan from "../assets/home/mooropan.png";
 import exilieen from "../assets/home/exilieen_logo.png";
+import srdt from "../assets/home/srdt.png";
 
 
 // --- Updated Project Data with Images ---
@@ -22,10 +23,10 @@ const projectsData = [
     tags: ["React js", "MongoDB", "Express js"]
   },
   {
-    image: "https://placehold.co/600x400/0a0a14/9f55ff?text=SRDT",
+    image: srdt,
     title: "SRDT",
     description: "A security and data transformation tool ensuring data integrity and protection for enterprise-level applications.",
-   tags: ["React", "Java Spring boot", "SQL"]
+    tags: ["React", "Java Spring boot", "SQL"]
   },
   {
     image: exilieen,
@@ -37,13 +38,13 @@ const projectsData = [
     image: "https://placehold.co/600x400/0a0a14/9f55ff?text=Hotel+CRM",
     title: "Hotel Management CRM",
     description: "A customer relationship management system tailored for the hospitality industry to enhance guest experiences.",
-   tags: ["React", "Java Spring boot", "SQL"]
+    tags: ["React", "Java Spring boot", "SQL"]
   },
   {
     image: "https://placehold.co/600x400/0a0a14/9f55ff?text=AgriMitra",
     title: "AgriMitra",
     description: "A farmer-centric application providing vital information on weather, market rates, and best farming practices.",
-   tags: ["React js", "Express js", "MongoDB", "Node js"]
+    tags: ["React js", "Express js", "MongoDB", "Node js"]
   },
   {
     image: "https://placehold.co/600x400/0a0a14/9f55ff?text=AMSA",
