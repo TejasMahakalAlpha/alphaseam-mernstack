@@ -4,9 +4,12 @@ import { Helmet } from 'react-helmet';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { FaBriefcase, FaGraduationCap, FaGlobe, FaLightbulb, FaTimes, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
-import api from '../api'; // Axios instance
+import axios from 'axios'; // Use axios directly
 
-// Custom Hook for the 3D Tilt effect
+// Use the correct API_BASE_URL from your .env file
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+
+// Custom Hook for the 3D Tilt effect (no changes needed here)
 const use3DTilt = () => {
     const ref = useRef(null);
     useEffect(() => {
@@ -35,6 +38,7 @@ const use3DTilt = () => {
     return ref;
 };
 
+
 const Career = () => {
   const [careers, setCareers] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -52,7 +56,8 @@ const Career = () => {
   useEffect(() => {
     AOS.init({ once: true, duration: 1000, easing: 'ease-in-out' });
 
-    api.get('/api/careers')
+    // Use axios with the full URL
+    axios.get(`${API_BASE_URL}/api/careers`)
       .then((res) => setCareers(res.data))
       .catch((err) => console.error('Error fetching careers:', err));
   }, []);
@@ -146,7 +151,8 @@ const Career = () => {
     data.append('resume', formData.resume);
 
     try {
-      await api.post('/api/resume', data);
+      // Use axios with the full URL
+      await axios.post(`${API_BASE_URL}/api/resume`, data);
       showNotification('Application submitted successfully!', 'success');
       handleCloseForm();
     } catch (err) {
@@ -177,7 +183,7 @@ const Career = () => {
       <div className="career-content-wrapper">
         <h2 className="section-title" data-aos="fade-up">Current Openings</h2>
         <div className="job-listings">
-          {careers.length > 0 ? careers.map((job, index) => (
+          {Array.isArray(careers) && careers.length > 0 ? careers.map((job, index) => (
             <div key={index} className="job-card-3d" ref={use3DTilt()} data-aos="fade-up" data-aos-delay={100 + index * 100}>
               <div className="job-card-content">
                 <div className="job-header">

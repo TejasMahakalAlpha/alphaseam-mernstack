@@ -1,11 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './Contact.css';
 import { FaLinkedinIn, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
-import api from '../api';
+import axios from 'axios'; // Use axios directly
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-// Custom Hook for the 3D Tilt effect
+// Use the correct API_BASE_URL from your .env file
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+
+// Custom Hook for the 3D Tilt effect (no changes needed)
 const use3DTilt = () => {
     const ref = useRef(null);
     useEffect(() => {
@@ -57,7 +60,7 @@ function Contact() {
     }, 4000);
   };
 
-  // --- Validation Logic ---
+  // --- Validation Logic (no changes needed) ---
   const validateField = (name, value) => {
     let error = '';
     switch (name) {
@@ -133,7 +136,8 @@ function Contact() {
         message: formData.message
       };
 
-      await api.post('/api/contacts', payload);
+      // Use axios with the full URL
+      await axios.post(`${API_BASE_URL}/api/contacts`, payload);
       showNotification('Message sent successfully!');
       setFormData({ name: '', email: '', phone: '', message: '' });
       setErrors({});
@@ -146,10 +150,10 @@ function Contact() {
   return (
     <div className="contact-page">
        {notification.show && (
-        <div className={`notification-toast ${notification.type} ${notification.show ? 'show' : ''}`}>
-          {notification.type === 'success' ? <FaCheckCircle /> : <FaExclamationCircle />}
-          {notification.message}
-        </div>
+         <div className={`notification-toast ${notification.type} ${notification.show ? 'show' : ''}`}>
+           {notification.type === 'success' ? <FaCheckCircle /> : <FaExclamationCircle />}
+           {notification.message}
+         </div>
       )}
 
       <div className="contact-hero-section" data-aos="fade-in">
@@ -203,7 +207,7 @@ function Contact() {
       <div className="map-section" data-aos="fade-up" data-aos-delay="300">
         <iframe
           title="Google Map"
-          src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d121008.75162320398!2d73.68082358566583!3d18.59550967191338!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2bbe7af9b56b1%3A0x7c1c86b796e12483!2sCity%20Centre%20-%20Kolte%20Patil!5e0!3m2!1sen!2sin!4v1754387642034!5m2!1sen!2sin"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3782.121321034423!2d73.73812161489344!3d18.58989548738089!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2bbc900000001%3A0x1c21e360cf3a2e3!2sHinjawadi%2C%20Pune%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1628860353921!5m2!1sen!2sin"
           width="100%"
           height="450"
           style={{ border: 0 }}

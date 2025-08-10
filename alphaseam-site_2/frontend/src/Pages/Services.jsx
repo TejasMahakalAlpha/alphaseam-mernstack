@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './Services.css';
 import { Link } from 'react-router-dom';
-import api from '../api'; 
+import axios from 'axios'; // Use axios directly
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
@@ -9,8 +9,10 @@ import {
   FaReact, FaNodeJs, FaAws, FaFigma, FaDocker, FaShieldAlt, FaCogs, FaCode, FaLink, FaUsers, FaCloud, FaMobileAlt, FaAndroid
 } from 'react-icons/fa';
 
+// Use the correct API_BASE_URL from your .env file
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
-// Data for the new Hexagon Skills Grid
+// Data for the new Hexagon Skills Grid (no changes needed)
 const skillsData = [
   { icon: <FaCogs />, title: "ERP & SAP", description: "Expertise in SAP S/4HANA, ABAP, FICO, MM, SD, PP Modules." },
   { icon: <FaReact />, title: "Full-Stack Web", description: "React, Node.js, Express, MongoDB, Firebase, REST APIs." },
@@ -21,14 +23,13 @@ const skillsData = [
   { icon: <FaShieldAlt />, title: "Cybersecurity", description: "Data protection, secure development, and ISO practices." },
 ];
 
-// --- Updated stats data with a 'symbol' property ---
 const stats = [
   { icon: "✨", value: 13, label: "Projects Completed", symbol: '+' },
   { icon: "👍", value: 18 , label: "Positive Feedback", symbol: '+' },
   { icon: "⏳", value: 80, label: "Certified Resources", symbol: '%' },
 ];
 
-// Custom Hook for the 3D Tilt effect
+// Custom Hook for the 3D Tilt effect (no changes needed)
 const use3DTilt = () => {
     const ref = useRef(null);
   
@@ -65,9 +66,8 @@ const use3DTilt = () => {
     return ref;
 };
 
-// --- Function to get a default icon based on service title (with added safety check) ---
+// Function to get a default icon (no changes needed)
 const getIconForService = (title) => {
-    // This check prevents the app from crashing if a service has no title
     const lowerCaseTitle = (title || '').toLowerCase(); 
     if (lowerCaseTitle.includes('sap')) return <FaCogs />;
     if (lowerCaseTitle.includes('software') || lowerCaseTitle.includes('development')) return <FaCode />;
@@ -75,7 +75,7 @@ const getIconForService = (title) => {
     if (lowerCaseTitle.includes('consulting')) return <FaUsers />;
     if (lowerCaseTitle.includes('cloud')) return <FaCloud />;
     if (lowerCaseTitle.includes('mobile') || lowerCaseTitle.includes('app')) return <FaMobileAlt />;
-    return "⚙️"; // Generic fallback icon
+    return "⚙️";
 };
 
 const ServiceCard = ({ service, index }) => {
@@ -106,7 +106,8 @@ const Services = () => {
   useEffect(() => {
     AOS.init({ once: true, duration: 1000, easing: 'ease-in-out' });
     
-    api.get('/api/services')
+    // Use axios with the full URL
+    axios.get(`${API_BASE_URL}/api/services`)
       .then((res) => {
         if (Array.isArray(res.data)) {
           setServices(res.data);
@@ -177,7 +178,6 @@ const Services = () => {
           {stats.map((stat, index) => (
             <div className="stat-card" key={index} data-aos="fade-up" data-aos-delay={index * 150}>
               <div className="stat-icon">{stat.icon}</div>
-              {/* --- Updated this line to use the 'symbol' property --- */}
               <div className="stat-value">{stat.value}{stat.symbol}</div>
               <div className="stat-label">{stat.label}</div>
             </div>

@@ -3,24 +3,28 @@ import './Blog.css';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { Helmet } from 'react-helmet';
-import api from '../api';
+import axios from 'axios'; // Use axios directly
 import { FaArrowRight } from 'react-icons/fa';
+
+// Use the correct API_BASE_URL from your .env file
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 const Blog = () => {
   const [blogs, setBlogs] = useState([]);
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://exilieen-tejas-backend.onrender.com';
   const newsletterLink = "https://www.linkedin.com/newsletters/alphaseam-sap-services-7341412789007069189";
 
   useEffect(() => {
     AOS.init({ once: true, duration: 1000, easing: 'ease-in-out' });
 
-    api.get('/api/blogs')
+    // Use axios with the full URL
+    axios.get(`${API_BASE_URL}/api/blogs`)
       .then(res => setBlogs(res.data))
       .catch(err => console.error('Error fetching blogs:', err));
   }, []);
 
-  const featuredBlog = blogs.length > 0 ? blogs[0] : null;
-  const otherBlogs = blogs.length > 1 ? blogs.slice(1) : [];
+  // Safety check: ensure blogs is an array before using slice
+  const featuredBlog = Array.isArray(blogs) && blogs.length > 0 ? blogs[0] : null;
+  const otherBlogs = Array.isArray(blogs) && blogs.length > 1 ? blogs.slice(1) : [];
 
   return (
     <div className="blog-page">
@@ -42,7 +46,8 @@ const Blog = () => {
             <div className="featured-card">
               {featuredBlog.image && (
                 <div className="featured-image-wrapper">
-                   <img src={`${BASE_URL}${featuredBlog.image}`} alt={featuredBlog.title} className="featured-image" />
+                  {/* Use the correct API_BASE_URL for images */}
+                   <img src={`${API_BASE_URL}${featuredBlog.image}`} alt={featuredBlog.title} className="featured-image" />
                 </div>
               )}
               <div className="featured-content">
@@ -65,7 +70,7 @@ const Blog = () => {
               {otherBlogs.map((blog, index) => (
                 <div key={blog._id} className="blog-card" data-aos="fade-up" data-aos-delay={100 + index * 100}>
                   {blog.image && (
-                    <img src={`${BASE_URL}${blog.image}`} alt={blog.title} className="blog-card-image" />
+                     <img src={`${API_BASE_URL}${blog.image}`} alt={blog.title} className="blog-card-image" />
                   )}
                   <div className="blog-card-content">
                     <span className="blog-date">{new Date(blog.createdAt).toLocaleDateString()}</span>
