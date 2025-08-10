@@ -1,31 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../api';
+import axios from 'axios'; // Use axios directly
 import './Admin.css';
+
+// Add the API_BASE_URL constant
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 const ManageContacts = () => {
   const [contacts, setContacts] = useState([]);
 
   const fetchContacts = async () => {
     try {
-      const res = await api.get('/api/contacts');
+      // Add ${API_BASE_URL} to the request
+      const res = await axios.get(`${API_BASE_URL}/api/contacts`);
       setContacts(res.data);
     } catch (err) {
       console.error('Error fetching contacts:', err);
     }
   };
+  
+  useEffect(() => {
+    fetchContacts();
+  }, []);
 
   const handleDelete = async (id) => {
     try {
-      await api.delete(`/api/contacts/${id}`);
+      // Add ${API_BASE_URL} to the request
+      await axios.delete(`${API_BASE_URL}/api/contacts/${id}`);
       fetchContacts();
     } catch (err) {
       console.error('Error deleting contact:', err);
     }
   };
-
-  useEffect(() => {
-    fetchContacts();
-  }, []);
 
   return (
     <div className="admin-container">
@@ -35,7 +40,7 @@ const ManageContacts = () => {
         {contacts.length === 0 ? (
           <p>No contact messages found.</p>
         ) : (
-          contacts.map((contact) => (
+          Array.isArray(contacts) && contacts.map((contact) => (
             <div key={contact._id} className="admin-item">
               <p><strong>Name:</strong> {contact.name}</p>
               <p><strong>Email:</strong> {contact.email}</p>

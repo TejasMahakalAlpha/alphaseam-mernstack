@@ -3,6 +3,9 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './Admin.css';
 
+// Define the API_BASE_URL constant at the top
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -12,7 +15,8 @@ const AdminLogin = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/admin/login`, {
+      // Use the API_BASE_URL variable here
+      const res = await axios.post(`${API_BASE_URL}/api/admin/login`, {
         email,
         password,
       });

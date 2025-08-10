@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../api';
+import axios from 'axios'; // Use axios directly
 import './Admin.css';
+
+// Add the API_BASE_URL constant
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 const ManageServices = () => {
   const [services, setServices] = useState([]);
@@ -11,7 +14,8 @@ const ManageServices = () => {
   });
 
   const fetchServices = () => {
-    api.get('/api/services')
+    // Add ${API_BASE_URL} to the request
+    axios.get(`${API_BASE_URL}/api/services`)
       .then((res) => setServices(res.data))
       .catch((err) => console.error('Fetch error:', err));
   };
@@ -21,7 +25,8 @@ const ManageServices = () => {
   }, []);
 
   const handleCreate = () => {
-    api.post('/api/services', newService)
+    // Add ${API_BASE_URL} to the request
+    axios.post(`${API_BASE_URL}/api/services`, newService)
       .then(() => {
         setNewService({ title: '', description: '', icon: '' });
         fetchServices();
@@ -33,16 +38,14 @@ const ManageServices = () => {
   };
 
   const handleDelete = (id) => {
-    api.delete(`/api/services/${id}`)
+    // Add ${API_BASE_URL} to the request
+    axios.delete(`${API_BASE_URL}/api/services/${id}`)
       .then(fetchServices)
       .catch((err) => console.error('Delete error:', err));
   };
 
-  const handleUpdate = (id, updatedService) => {
-    api.put(`/api/services/${id}`, updatedService)
-      .then(fetchServices)
-      .catch((err) => console.error('Update error:', err));
-  };
+  // handleUpdate function is not used in the JSX, but if you use it, add the URL prefix there too.
+  // const handleUpdate = (id, updatedService) => { ... };
 
   return (
     <div className="admin-container">
@@ -71,12 +74,11 @@ const ManageServices = () => {
       </div>
 
       <div className="admin-list">
-        {services.map((service) => (
+        {Array.isArray(services) && services.map((service) => (
           <div key={service._id} className="admin-item">
             <h3>{service.title}</h3>
             <p>{service.description}</p>
             <button onClick={() => handleDelete(service._id)}>Delete</button>
-            {/* Optional: Add inline editing or modal for update */}
           </div>
         ))}
       </div>

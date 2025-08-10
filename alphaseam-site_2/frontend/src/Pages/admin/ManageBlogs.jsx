@@ -1,7 +1,9 @@
-// ManageBlogs.jsx
 import React, { useEffect, useState } from 'react';
-import api from '../../api';
+import axios from 'axios'; // Use axios directly
 import './Admin.css';
+
+// Add the API_BASE_URL constant
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 const ManageBlogs = () => {
   const [blogs, setBlogs] = useState([]);
@@ -11,15 +13,13 @@ const ManageBlogs = () => {
     image: null,
   });
 
-  // ✅ Backend URL from .env or default
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://exilieen-tejas-backend.onrender.com';
-
   useEffect(() => {
     fetchBlogs();
   }, []);
 
   const fetchBlogs = () => {
-    api.get('/api/blogs')
+    // Add ${API_BASE_URL} to the request
+    axios.get(`${API_BASE_URL}/api/blogs`)
       .then(res => setBlogs(res.data))
       .catch(err => console.error('Fetch error:', err));
   };
@@ -42,8 +42,9 @@ const ManageBlogs = () => {
     if (formData.image) {
       blogData.append('image', formData.image);
     }
-
-    api.post('/api/blogs', blogData, {
+    
+    // Add ${API_BASE_URL} to the request
+    axios.post(`${API_BASE_URL}/api/blogs`, blogData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
       .then(() => {
@@ -86,14 +87,15 @@ const ManageBlogs = () => {
 
       {/* Blog List */}
       <div className="admin-list">
-        {blogs.map((blog) => (
+        {Array.isArray(blogs) && blogs.map((blog) => (
           <div key={blog._id} className="admin-item">
             <h4>{blog.title}</h4>
             <p>{blog.content}</p>
 
             {blog.image && (
               <img
-                src={`${BASE_URL}${blog.image}`}
+                // Add ${API_BASE_URL} to the image source
+                src={`${API_BASE_URL}${blog.image}`}
                 alt="blog-img"
                 style={{ width: '100px', height: 'auto', marginTop: '8px' }}
               />

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../api';
+import axios from 'axios'; // Use axios directly
 import './Admin.css';
+
+// Add the API_BASE_URL constant
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 const ManageCareers = () => {
   const [careers, setCareers] = useState([]);
@@ -13,7 +16,8 @@ const ManageCareers = () => {
 
   const fetchCareers = async () => {
     try {
-      const res = await api.get('/api/careers');
+      // Add ${API_BASE_URL} to the request
+      const res = await axios.get(`${API_BASE_URL}/api/careers`);
       setCareers(res.data);
     } catch (err) {
       console.error('Error fetching careers:', err);
@@ -37,7 +41,8 @@ const ManageCareers = () => {
     }
 
     try {
-      await api.post('/api/careers', newCareer);
+      // Add ${API_BASE_URL} to the request
+      await axios.post(`${API_BASE_URL}/api/careers`, newCareer);
       fetchCareers();
       setNewCareer({ position: '', location: '', experience: '', description: '' });
     } catch (err) {
@@ -48,7 +53,8 @@ const ManageCareers = () => {
 
   const handleDelete = async (id) => {
     try {
-      await api.delete(`/api/careers/${id}`);
+      // Add ${API_BASE_URL} to the request
+      await axios.delete(`${API_BASE_URL}/api/careers/${id}`);
       fetchCareers();
     } catch (err) {
       console.error('Error deleting career:', err);
@@ -91,7 +97,7 @@ const ManageCareers = () => {
       </div>
 
       <div className="admin-list">
-        {careers.map((career) => (
+        {Array.isArray(careers) && careers.map((career) => (
           <div key={career._id} className="admin-item">
             <h3>{career.position} — {career.location}</h3>
             <p><strong>Experience:</strong> {career.experience}</p>
