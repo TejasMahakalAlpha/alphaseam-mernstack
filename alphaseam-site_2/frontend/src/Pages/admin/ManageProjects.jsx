@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import './ManageProjects.css'; // Assuming you have a shared admin CSS file
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+console.log('The API base URL is:', API_BASE_URL); // <-- THIS IS THE TEST LINE
 
 const ManageProjects = () => {
     const [projects, setProjects] = useState([]);

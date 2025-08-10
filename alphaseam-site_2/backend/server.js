@@ -12,8 +12,9 @@ const blogRoutes = require('./routes/blogRoutes');
 const careerRoutes = require('./routes/careerRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const resumeRoutes = require('./routes/resumeRoutes');
+// CORRECT
+const projectRoutes = require('./routes/projectRoutes');// App setup
 
-// App setup
 const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/adminpanel';
@@ -49,6 +50,7 @@ app.use('/api/careers', careerRoutes);
 app.use('/api/contacts', contactRoutes);
 app.use('/api/resume', resumeRoutes);    // POST resume
 app.use('/api/resumes', resumeRoutes);   // GET resumes for admin
+app.use('/api/projects', projectRoutes); // ✅ New line
 
 // MongoDB Connection
 mongoose.connect(MONGO_URI)
