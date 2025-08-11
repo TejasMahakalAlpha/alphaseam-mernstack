@@ -261,7 +261,9 @@
   .social-icons-wrapper {
     justify-content: center;
   }
+  
+  /* THIS IS THE NEW CODE TO FIX THE MAP ON MOBILE */
+  .map-section {
+    padding: 0 20px 60px; /* Reduces horizontal padding */
+  }
 }
-
-
-
